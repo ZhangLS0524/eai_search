@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.EAI.project.Model.Product;
 
 @Repository
-public interface ProductRepository extends JpaRepository<Product, Long> {
+public interface ProductRepository extends JpaRepository<Product, String> {
     List<Product> findByTitleContaining(String title);
     
     // Search by exact word match (case insensitive)

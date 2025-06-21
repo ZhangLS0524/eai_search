@@ -59,27 +59,10 @@ public class ProductService {
                 .collect(Collectors.toList());
         }
         
-        // Trim and normalize the keyword
         String normalizedKeyword = keyword.trim().toLowerCase();
         
-        List<Product> results;
+        List<Product> results = productRepository.findByTitleContainingWord(normalizedKeyword);
         
-        // If keyword contains spaces, search for exact word matches
-        if (normalizedKeyword.contains(" ")) {
-            results = productRepository.findByTitleContainingIgnoreCase(normalizedKeyword);
-        } else {
-            // For single words, try to find exact word matches first
-            List<Product> exactMatches = productRepository.findByTitleContainingWord(normalizedKeyword);
-            
-            // If no exact matches found, fall back to partial matches
-            if (exactMatches.isEmpty()) {
-                results = productRepository.findByTitleContainingIgnoreCase(normalizedKeyword);
-            } else {
-                results = exactMatches;
-            }
-        }
-        
-        // Limit results to the specified search amount
         return results.stream()
             .limit(searchAmount)
             .collect(Collectors.toList());

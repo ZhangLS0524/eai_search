@@ -52,28 +52,37 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    public List<Product> searchProducts(String keyword) {
+    public List<Product> searchProducts(String keyword, Integer searchAmount) {
         if (keyword == null || keyword.trim().isEmpty()) {
-            return getAllProducts();
+            return getAllProducts().stream()
+                .limit(searchAmount)
+                .collect(Collectors.toList());
         }
         
         // Trim and normalize the keyword
         String normalizedKeyword = keyword.trim().toLowerCase();
         
+        List<Product> results;
+        
         // If keyword contains spaces, search for exact word matches
         if (normalizedKeyword.contains(" ")) {
-            return productRepository.findByTitleContainingIgnoreCase(normalizedKeyword);
+            results = productRepository.findByTitleContainingIgnoreCase(normalizedKeyword);
         } else {
             // For single words, try to find exact word matches first
             List<Product> exactMatches = productRepository.findByTitleContainingWord(normalizedKeyword);
             
             // If no exact matches found, fall back to partial matches
             if (exactMatches.isEmpty()) {
-                return productRepository.findByTitleContainingIgnoreCase(normalizedKeyword);
+                results = productRepository.findByTitleContainingIgnoreCase(normalizedKeyword);
+            } else {
+                results = exactMatches;
             }
-            
-            return exactMatches;
         }
+        
+        // Limit results to the specified search amount
+        return results.stream()
+            .limit(searchAmount)
+            .collect(Collectors.toList());
     }
 
     public List<Product> filterProducts(String category, String sellerName, Double priceOriginal, Double priceActual, Double itemRating, Integer totalRating, Integer totalSold, Integer favoriteCount) {

@@ -1,4 +1,9 @@
 services:
+  - type: postgresql
+    name: EAI_project
+    plan: free
+    ipAllowList: []
+  
   - type: web
     name: virtualshop-api
     env: docker
@@ -7,10 +12,16 @@ services:
       - key: SPRING_PROFILES_ACTIVE
         value: production
       - key: SPRING_DATASOURCE_URL
-        sync: false
+        fromDatabase:
+          name: EAI_project
+          property: connectionString
       - key: SPRING_DATASOURCE_USERNAME
-        sync: false
+        fromDatabase:
+          name: EAI_project
+          property: user
       - key: SPRING_DATASOURCE_PASSWORD
-        sync: false
+        fromDatabase:
+          name: EAI_project
+          property: password
       - key: PORT
         value: 8080 

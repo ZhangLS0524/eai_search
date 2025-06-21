@@ -36,6 +36,9 @@ build/
 .env
 *.env
 
+### Development Configuration ###
+src/main/resources/application-dev.properties
+
 ### Logs ###
 *.log
 logs/

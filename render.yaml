@@ -1,27 +1,14 @@
 services:
-  - type: postgresql
-    name: EAI_project
-    plan: free
-    ipAllowList: []
-  
   - type: web
     name: virtualshop-api
     env: docker
     plan: free
+    healthCheckPath: /health
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: production
-      - key: SPRING_DATASOURCE_URL
-        fromDatabase:
-          name: EAI_project
-          property: connectionString
-      - key: SPRING_DATASOURCE_USERNAME
-        fromDatabase:
-          name: EAI_project
-          property: user
-      - key: SPRING_DATASOURCE_PASSWORD
-        fromDatabase:
-          name: EAI_project
-          property: password
       - key: PORT
-        value: 8080 
+        value: 8080
+      # The database environment variables (SPRING_DATASOURCE_URL, 
+      # SPRING_DATASOURCE_USERNAME, SPRING_DATASOURCE_PASSWORD)
+      # should now be managed from the Render dashboard. 

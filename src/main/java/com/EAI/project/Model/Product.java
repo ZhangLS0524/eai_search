@@ -25,7 +25,7 @@ import java.time.OffsetDateTime;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private Long id;
     private String title;
     private String description;
     private Double priceOriginal;

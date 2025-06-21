@@ -24,5 +24,9 @@ RUN ./mvnw clean package -DskipTests
 # Expose port
 EXPOSE 8080
 
-# Run the application
-CMD ["java", "-jar", "target/project-0.0.1-SNAPSHOT.jar"] 
+# Add health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+  CMD curl -f http://localhost:8080/health || exit 1
+
+# Run the application with proper JVM options for production
+CMD ["java", "-Xmx512m", "-Xms256m", "-XX:+UseG1GC", "-Djava.security.egd=file:/dev/./urandom", "-jar", "target/project-0.0.1-SNAPSHOT.jar"] 
